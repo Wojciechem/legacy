@@ -1,5 +1,6 @@
-controllers:
+operations:
     resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+        path: ../src/Operations/UI/
+        namespace: App\Operations\UI
     type: attribute
+    prefix: '/ops'
