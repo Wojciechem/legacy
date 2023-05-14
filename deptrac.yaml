@@ -1,0 +1,44 @@
+parameters:
+    paths:
+        - ./src
+    exclude_files:
+        - '#.*test.*#'
+    layers:
+        - name: Domain
+          collectors:
+              - type: glob
+                value: src/**/Domain/**
+        - name: Application
+          collectors:
+              - type: glob
+                value: src/**/Application/**
+        - name: UI
+          collectors:
+              - type: glob
+                value: src/**/UI/**
+        - name: Infrastructure
+          collectors:
+              - type: glob
+                value: src/**/Infrastructure/**
+        - name: Vendors
+          collectors:
+              - type: classLike
+                value: Symfony.*
+        - name: PSR
+          collectors:
+              - type: classLike
+                value: Psr.*
+        # see also https://qossmic.github.io/deptrac/collectors/#layer-collector
+    ruleset:
+        Domain:
+        Application:
+            - Domain
+        UI:
+            - Application
+            - Vendors
+            - PSR
+        Infrastructure:
+            - Domain
+            - Application
+            - Vendors
+            - PSR
