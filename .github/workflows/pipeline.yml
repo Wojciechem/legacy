@@ -23,8 +23,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build image for testing
         run: >
-          docker buildx build --target test -t ghcr.io/wojciechem/legacy:latest \
-          --cache-from type=registry,ref=ghcr.io/wojciechem/legacy:latest-cache \
-          --cache-to type=registry,ref=ghcr.io/wojciechem/legacy:latest-cache \
-          --push \
+          docker buildx build --target test -t ghcr.io/wojciechem/legacy:latest 
+          --cache-from type=registry,ref=ghcr.io/wojciechem/legacy:latest-cache 
+          --cache-to type=registry,ref=ghcr.io/wojciechem/legacy:latest-cache 
+          --push 
           .
