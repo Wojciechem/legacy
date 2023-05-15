@@ -36,8 +36,10 @@ jobs:
           -t ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test .
   test:
     needs: build
-    runs-on: ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test
+    runs-on: ubuntu-latest
 
+    container:
+      image: ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test
     steps:
       - name: Smoke test
         run: vendor/bin/phpunit --filter AlivenessTest
