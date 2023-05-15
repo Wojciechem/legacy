@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.5.2
 FROM php:8.2-fpm as base
 ENV PROJECT="net.miedzybrodzki.legacy"
 
