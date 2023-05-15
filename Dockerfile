@@ -6,7 +6,7 @@ ENV PROJECT="net.miedzybrodzki.legacy"
       #install-php-extensions gd xdebug
 
 RUN apt-get update && apt-get install -y --no-install-recommends unzip
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html && mkdir /var/www/html/var
 USER www-data
 
 FROM base as vendor
@@ -29,7 +29,6 @@ COPY --link public/ public/
 COPY --link config/ config/
 COPY --link src/ src/
 COPY --link .env .
-RUN mkdir var
 
 FROM codebase as test
 
