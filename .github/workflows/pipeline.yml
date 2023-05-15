@@ -22,7 +22,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup builder
-        run: docker buildx create --use
+        run: docker buildx create --bootstrap --use
       - name: Build image for testing
         run: >
           docker buildx build --target test 
