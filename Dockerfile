@@ -29,6 +29,7 @@ COPY --link public/ public/
 COPY --link config/ config/
 COPY --link src/ src/
 COPY --link .env .
+RUN mkdir var
 
 FROM codebase as test
 
