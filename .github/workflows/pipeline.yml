@@ -21,6 +21,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup builder
+        run: docker buildx create --use
       - name: Build image for testing
         run: >
           docker buildx build --target test -t ghcr.io/wojciechem/legacy:latest 
