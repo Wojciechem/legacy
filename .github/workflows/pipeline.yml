@@ -33,10 +33,10 @@ jobs:
           --pull
           --push 
           -t ghcr.io/wojciechem/legacy:latest-test 
-          -t ghcr.io/wojciechem/legacy:$(GITHUB_SHA)-test .
+          -t ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test .
   test:
     needs: build
-    runs-on: ghcr.io/wojciechem/legacy:$(GITHUB_SHA)-test
+    runs-on: ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test
 
     steps:
       - name: Smoke test
