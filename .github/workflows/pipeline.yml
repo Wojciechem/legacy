@@ -32,4 +32,12 @@ jobs:
           --cache-to type=registry,ref=ghcr.io/wojciechem/legacy:latest-cache 
           --pull
           --push 
-          -t ghcr.io/wojciechem/legacy:latest .
+          -t ghcr.io/wojciechem/legacy:latest-test 
+          -t ghcr.io/wojciechem/legacy:$(GITHUB_SHA)-test .
+  test:
+    needs: build
+    runs-on: ghcr.io/wojciechem/legacy:$(GITHUB_SHA)-test
+
+    steps:
+      - name: Smoke test
+        run: vendor/bin/phpunit --filter AlivenessTest
