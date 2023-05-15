@@ -26,7 +26,6 @@ jobs:
       - name: Build image for testing
         run: >
           docker buildx build --target test 
-          --cache-from type=registry,ref=ghcr.io/wojciechem/legacy:latest-cache 
           --cache-to type=registry,ref=ghcr.io/wojciechem/legacy:latest-cache 
           --push 
           -t ghcr.io/wojciechem/legacy:latest .
