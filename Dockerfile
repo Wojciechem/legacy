@@ -34,6 +34,8 @@ FROM codebase as test
 
 ENV APP_ENV=test
 
+COPY --link phpunit.xml.dist .
+COPY --link deptrac.yaml .
 COPY --link tests/ tests/
 COPY --link .env.test .
 COPY --link --from=test-vendor /var/www/html/vendor ./vendor
