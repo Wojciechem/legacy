@@ -36,7 +36,7 @@ jobs:
           -t ghcr.io/wojciechem/legacy:latest-test 
           -t ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test .
       - name: output
-        run: echo "tag=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+        run: echo "tag=${GITHUB_SHA}" >> $GITHUB_OUTPUT && echo ${GITHUB_SHA}
   test:
     needs: build
     runs-on: ubuntu-latest
