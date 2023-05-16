@@ -13,8 +13,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      imagetag: ${{ steps.output.outputs.imagetag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -35,14 +33,12 @@ jobs:
           --push 
           -t ghcr.io/wojciechem/legacy:latest-test 
           -t ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test .
-      - name: output
-        run: echo "{imagetag}={{$GITHUB_SHA}}" >> $GITHUB_OUTPUT && echo ${GITHUB_SHA}
   test:
     needs: build
     runs-on: ubuntu-latest
 
-    container:
-      image: ghcr.io/wojciechem/legacy:${{ needs.build.outputs.imagetag }}-test
     steps:
+      - name: Pull image
+        run: docker pull ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test
       - name: Smoke test
-        run: vendor/bin/phpunit --filter AlivenessTest
+        run: docker run --rm -it ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test vendor/bin/phpunit --filter AlivenessTest
