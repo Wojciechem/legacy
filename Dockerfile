@@ -42,7 +42,7 @@ COPY --link --from=test-vendor /var/www/html/vendor ./vendor
 COPY --link --from=test-vendor /var/www/html/composer.lock .
 COPY --link --from=test-vendor /var/www/html/symfony.lock .
 COPY --link --from=test-vendor /var/www/html/composer.json .
-RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer,id=33,gid=33 \
+RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
     composer install
 
 FROM codebase as dist
