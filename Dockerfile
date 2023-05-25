@@ -13,13 +13,13 @@ FROM base as vendor
 
 COPY composer.json composer.lock symfony.lock ./
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
-    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer \
+    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=33,gid=33 \
     composer install --no-scripts --no-dev
 
 FROM vendor as test-vendor
 
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
-    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer \
+    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=33,gid=33 \
     composer install --no-scripts
 
 FROM base as codebase
@@ -42,7 +42,7 @@ COPY --link --from=test-vendor /var/www/html/vendor ./vendor
 COPY --link --from=test-vendor /var/www/html/composer.lock .
 COPY --link --from=test-vendor /var/www/html/symfony.lock .
 COPY --link --from=test-vendor /var/www/html/composer.json .
-RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
+RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer,id=33,gid=33 \
     composer install
 
 FROM codebase as dist
@@ -54,4 +54,4 @@ RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=
     --mount=source=composer.json,target=composer.json \
     --mount=source=composer.lock,target=composer.lock \
     --mount=source=symfony.lock,target=symfony.lock \
-    composer install
+    composer install --no-dev --optimize-autoloader --classmap-authoritative
