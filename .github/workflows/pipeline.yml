@@ -42,3 +42,5 @@ jobs:
         run: docker pull ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test
       - name: Smoke test
         run: docker run --rm -i ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test vendor/bin/phpunit --filter AlivenessTest
+      - name: Check layer dependency rules
+        run: docker run --rm -i ghcr.io/wojciechem/legacy:${GITHUB_SHA}-test vendor/bin/deptrac analyse
