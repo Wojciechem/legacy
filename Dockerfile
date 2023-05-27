@@ -49,9 +49,11 @@ FROM codebase as dist
 COPY --link --from=test-vendor /var/www/html/vendor ./vendor
 
 ENV APP_ENV=prod
+ENV APP_SECRET=f07a7b530a2efa3f5af66a09e7e0565b
 
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
     --mount=source=composer.json,target=composer.json \
     --mount=source=composer.lock,target=composer.lock \
     --mount=source=symfony.lock,target=symfony.lock \
-    composer install --no-dev --optimize-autoloader --classmap-authoritative
+    composer install --no-dev --optimize-autoloader --classmap-authoritative && \
+    composer dump-env prod --empty
