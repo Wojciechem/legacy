@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1.5.2
 FROM php:8.2-fpm as base
 ENV PROJECT="net.miedzybrodzki.legacy"
+ENV UID=33
+ENV GID=33
 
 #RUN  --mount=type=bind,from=mlocati/php-extension-installer:2.1.23,source=/usr/bin/install-php-extensions,target=/usr/local/bin/install-php-extensions \
       #install-php-extensions gd xdebug
@@ -13,40 +15,41 @@ FROM base as vendor
 
 COPY composer.json composer.lock symfony.lock ./
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
-    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=33,gid=33 \
+    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=$UID,gid=$GID \
     composer install --no-scripts --no-dev
 
 FROM vendor as test-vendor
 
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
-    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=33,gid=33 \
+    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=$UID,gid=$GID \
     composer install --no-scripts
 
 FROM base as codebase
 
-COPY --link bin/ bin/
-COPY --link public/ public/
-COPY --link config/ config/
-COPY --link src/ src/
-COPY --link .env .
+COPY --link --chown=$UID:$GID bin/ bin/
+COPY --link --chown=$UID:$GID public/ public/
+COPY --link --chown=$UID:$GID config/ config/
+COPY --link --chown=$UID:$GID src/ src/
+COPY --link --chown=$UID:$GID .env .
 
 FROM codebase as test
 
 ENV APP_ENV=test
 
-COPY --link phpunit.xml.dist .
-COPY --link deptrac.yaml .
-COPY --link tests/ tests/
-COPY --link .env.test .
-COPY --link --from=test-vendor /var/www/html/vendor ./vendor
-COPY --link --from=test-vendor /var/www/html/composer.lock .
-COPY --link --from=test-vendor /var/www/html/symfony.lock .
-COPY --link --from=test-vendor /var/www/html/composer.json .
+COPY --link --chown=$UID:$GID phpunit.xml.dist .
+COPY --link --chown=$UID:$GID deptrac.yaml .
+COPY --link --chown=$UID:$GID tests/ tests/
+COPY --link --chown=$UID:$GID .env.test .
+COPY --link --chown=$UID:$GID --from=test-vendor /var/www/html/vendor ./vendor
+COPY --link --chown=$UID:$GID --from=test-vendor /var/www/html/composer.lock .
+COPY --link --chown=$UID:$GID --from=test-vendor /var/www/html/symfony.lock .
+COPY --link --chown=$UID:$GID --from=test-vendor /var/www/html/composer.json .
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
+    --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=$UID,gid=$GID \
     composer install
 
 FROM codebase as dist
-COPY --link --from=test-vendor /var/www/html/vendor ./vendor
+COPY --link --chown=$UID:$GID --from=test-vendor /var/www/html/vendor ./vendor
 
 ENV APP_ENV=prod
 ENV APP_SECRET=f07a7b530a2efa3f5af66a09e7e0565b
