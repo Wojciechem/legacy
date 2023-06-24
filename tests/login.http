@@ -1,0 +1,9 @@
+# curl -X POST -H "Content-Type: application/json" https://localhost/api/login_check -d '{"username":"johndoe","password":"example"}'
+POST http://localhost:8765/api/login_check
+Accept: application/json
+Content-Type: application/json
+
+{"username":"johndoe","password":"{{password}}"}
+
+###
+

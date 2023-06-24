@@ -1,0 +1,46 @@
+version: '3.8'
+secrets:
+  jwt_public:
+    file: ./.ops/jwt/public.pem
+  jwt_private:
+    file: ./.ops/jwt/private.pem
+
+services:
+  webapp:
+    image: ghcr.io/wojciechem/legacy:dev-local
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: test
+    env_file:
+      - .env
+    secrets:
+      - jwt_public
+      - jwt_private
+
+  nginx:
+    image: nginx:1.25.1
+    ports:
+      - target: 80
+        published: 8765
+        protocol: tcp
+    volumes:
+      - ./.ops/server.conf.template:/etc/nginx/templates/default.conf.template/:ro
+      - ./public:/app/public
+    environment:
+      - NGINX_HOST=localhost
+
+  webapp-frankenphp:
+    image: ghcr.io/wojciechem/legacy:dev-local
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - BASE_IMAGE=dunglas/frankenphp:main
+    profiles:
+      - dev
+    ports:
+      - target: 80
+        published: 8765
+        protocol: tcp
+

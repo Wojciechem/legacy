@@ -1,4 +1,6 @@
 .idea/
+.ops/jwt
+tests/http-client.private.env.json
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -18,3 +20,7 @@
 ###> qossmic/deptrac-shim ###
 /.deptrac.cache
 ###< qossmic/deptrac-shim ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

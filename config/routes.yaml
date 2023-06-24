@@ -4,3 +4,14 @@ operations:
         namespace: App\Operations\UI
     type: attribute
     prefix: '/ops'
+
+operations_secured:
+    resource:
+        path: ../src/Operations/UI/Secured
+        namespace: App\Operations\UI\Secured
+    type: attribute
+    prefix: '/api/ops'
+
+# config/routes.yaml
+api_login_check:
+    path: /api/login_check
