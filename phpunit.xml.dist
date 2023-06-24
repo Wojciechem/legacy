@@ -20,7 +20,7 @@
       <directory>tests</directory>
     </testsuite>
   </testsuites>
-  <coverage/>
+  <coverage pathCoverage="true"/>
   <!-- Run `composer require symfony/panther` before enabling this extension -->
   <!--
     <extensions>
@@ -30,6 +30,10 @@
   <source>
     <include>
       <directory suffix=".php">src</directory>
+      <directory suffix=".php">tests/Fake</directory>
     </include>
+    <exclude>
+      <directory suffix="Test.php">tests/Fake</directory>
+    </exclude>
   </source>
 </phpunit>
