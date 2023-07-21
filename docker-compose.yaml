@@ -29,6 +29,8 @@ services:
       - ./public:/app/public
     environment:
       - NGINX_HOST=localhost
+      - APP_HOST=webapp
+      - APP_PORT=9000
 
   webapp-frankenphp:
     image: ghcr.io/wojciechem/legacy:dev-local
