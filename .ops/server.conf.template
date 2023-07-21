@@ -9,7 +9,7 @@ server {
     }
 
     location ~ ^/index\\.php(/|$) {
-        fastcgi_pass webapp:9000;
+        fastcgi_pass ${APP_HOST}:${APP_PORT};
         fastcgi_split_path_info ^(.+\\.php)(/.*)$;
         include fastcgi_params;
 
