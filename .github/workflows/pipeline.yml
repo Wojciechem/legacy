@@ -52,6 +52,6 @@ jobs:
       - name: create context
         env: 
           DOCKER_CONTEXT: ${{ secrets.DOCKER_CONTEXT }}
-        run: echo "${DOCKER_CONTEXT}" | docker context import swarm -
+        run: echo "${DOCKER_CONTEXT}" | base64 --decode | docker context import swarm -
       - name: use context
         run: docker context use swarm
