@@ -57,7 +57,7 @@ jobs:
         env:
           PUBKEY: ${{ secrets.DEPLOYMENT_PUB_KEY }}
           KEY: ${{ secrets.DEPLOYMENT_SECRET_KEY }}
-        run: mkdir -p ~/.ssh && echo "${PUBKEY}" >> ~/.ssh/id_ed25519.pub && echo "${KEY}" >> ~/.ssh/id_ed25519
+        run: mkdir -p ~/.ssh && echo "${PUBKEY}" >> ~/.ssh/id_ed25519.pub && echo "${KEY}" >> ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
       - name: add fingerprint
         run: ssh-keyscan -H 49.12.190.228 >> ~/.ssh/known_hosts
       - name: use context
