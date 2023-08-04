@@ -52,6 +52,14 @@ jobs:
       - name: create context
         env: 
           DOCKER_CONTEXT: ${{ secrets.DOCKER_CONTEXT }}
-        run: echo "${DOCKER_CONTEXT}" | base64 --decode | docker context import swarm -
+          PUBKEY: ${{ secrets.DEPLOYMENT_PUB_KEY }}
+          KEY: ${{ secrets.DEPLOYMENT_SECRET_KEY }}
+        run: |
+          echo "${DOCKER_CONTEXT}" | base64 --decode | docker context import swarm
+          mkdir -p ~/.ssh
+          echo "${PUBKEY}" >> ~/.ssh/id_ed25519.pub
+          echo "${KEY}" >> ~/.ssh/id_ed25519
       - name: use context
         run: docker context use swarm
+      - name: debug
+        run: docker stack ls
