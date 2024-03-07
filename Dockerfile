@@ -52,7 +52,7 @@ RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=
     composer install
 
 FROM codebase as dist
-COPY --link --chown=$UID:$GID --from=test-vendor $DIR/vendor ./vendor
+COPY --link --chown=$UID:$GID --from=vendor $DIR/vendor ./vendor
 
 ENV APP_ENV=prod
 ENV APP_SECRET=f07a7b530a2efa3f5af66a09e7e0565b
