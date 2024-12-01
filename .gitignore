@@ -24,3 +24,10 @@ tests/http-client.private.env.json
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+### terraform
+.ops/terraform/terraform.tfvars
+*.tfstate
+*.tfstate.backup
+.ops/terraform/.terraform.lock.hcl
+.ops/terraform/.terraform
