@@ -22,6 +22,25 @@ services:
       - ./vendor:/app/vendor
       - ./src:/app/src
 
+  openresty:
+    build:
+      dockerfile: ./.ops/openresty/Dockerfile
+      context: .
+      tags:
+        - "ghcr.io/wojciechem/openresty:dev-local"
+    ports:
+      - target: 80
+        published: 8700
+        protocol: tcp
+    volumes:
+      - ./.ops/server.conf.template:/etc/nginx/templates/default.conf.template/:ro
+      - ./public:/app/public
+    environment:
+      - NGINX_HOST=localhost
+      - REDIRECT_DOMAIN=localhost:8700
+      - APP_HOST=webapp
+      - APP_PORT=9000
+
   nginx:
     image: nginx:1.25.1
     ports:
