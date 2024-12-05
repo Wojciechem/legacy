@@ -1,6 +1,6 @@
-# syntax=docker/dockerfile:1.5.2
+# syntax=docker/dockerfile:1.11.1
 ARG BASE_IMAGE=php:8.2-fpm
-FROM ${BASE_IMAGE} as base
+FROM ${BASE_IMAGE} AS base
 ENV PROJECT="net.miedzybrodzki.legacy"
 ENV DIR="/app"
 ENV UID=33
@@ -14,20 +14,20 @@ RUN mkdir -p /app && chown -R www-data:www-data /app
 WORKDIR /app
 USER www-data
 
-FROM base as vendor
+FROM base AS vendor
 
 COPY composer.json composer.lock symfony.lock ./
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
     --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=$UID,gid=$GID \
     composer install --no-scripts --no-dev
 
-FROM vendor as test-vendor
+FROM vendor AS test-vendor
 
 RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=/usr/local/bin/composer \
     --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=$UID,gid=$GID \
     composer install --no-scripts
 
-FROM base as codebase
+FROM base AS codebase
 
 COPY --link --chown=$UID:$GID bin/ bin/
 COPY --link --chown=$UID:$GID public/ public/
@@ -35,7 +35,7 @@ COPY --link --chown=$UID:$GID config/ config/
 COPY --link --chown=$UID:$GID src/ src/
 COPY --link --chown=$UID:$GID .env .
 
-FROM codebase as test
+FROM codebase AS test
 
 ENV APP_ENV=test
 
@@ -51,7 +51,7 @@ RUN --mount=type=bind,from=composer/composer:2.2.21-bin,source=/composer,target=
     --mount=type=cache,id=$(PROJECT)-composer-cache,target=/var/www/.composer,id=$UID,gid=$GID \
     composer install
 
-FROM codebase as dist
+FROM codebase AS dist
 COPY --link --chown=$UID:$GID --from=vendor $DIR/vendor ./vendor
 
 ENV APP_ENV=prod
